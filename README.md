@@ -1,219 +1,131 @@
-Enterprise Data Automation & Databricks Migration
+# Enterprise Data Automation & Databricks Migration
 From a locally executed Python workflow to a centralized, automated data-processing architecture in Databricks.
 
-Overview
-This project demonstrates the engineering evolution of a recurring business data process from local Python execution into a centralized Databricks workflow.
+## Overview
+This repository documents the engineering evolution of a recurring business data process, migrating it from local Python execution into a centralized Databricks workflow. 
 
-The original challenge involved processing multiple data sources, applying business rules, validating records, enriching information, and generating a standardized Excel deliverable.
+The original pipeline processed multiple data sources, applied deterministic business rules, validated records, enriched datasets, and generated a standardized Excel deliverable. The updated architecture focuses on centralized execution, repeatability, automated validation, and operational continuity.
 
-The solution evolved from a locally executed Python process into an automated architecture designed around centralized execution, repeatability, validation, and operational continuity.
+## Tech Stack
+* **Language & Core Libraries:** Python, Pandas, openpyxl
+* **Platform & Infrastructure:** Databricks
+* **Automation Target:** Excel Automation
+* **Version Control:** Git / GitHub
 
-Tech Stack
-Python
-Pandas
-openpyxl
-Databricks
-Excel Automation
-Git / GitHub
-The Challenge
-The original workflow required multiple processing steps before a final business-ready dataset could be delivered.
+## The Challenge
+The legacy workflow required multiple manual or fragmented processing steps before delivering a business-ready dataset:
+* Data extraction and cleansing
+* Data transformation and enrichment
+* Business-rule evaluation and record validation
+* Priority classification and Excel report generation
 
-These steps included:
+Executing this process locally introduced a significant operational bottleneck: pipeline execution depended entirely on a specific workstation and a local Python environment. The objective of this migration was to eliminate these hardware dependencies and redesign the pipeline for a centralized, reproducible, and cloud-managed environment.
 
-Data extraction
-Data cleansing
-Data transformation
-Business-rule evaluation
-Record validation
-Data enrichment
-Priority classification
-Excel report generation
-Running the workflow locally also introduced an important operational limitation: execution depended on a specific workstation and local Python environment.
+---
 
-The objective was therefore not only to automate the calculations, but to redesign the workflow so that it could execute in a more centralized and reproducible environment.
+## Architecture Evolution
 
-Architecture Evolution
+### Phase 1 — Local Python Automation
+The initial implementation consolidated the manual business process into a unified Python script, moving away from manual spreadsheet transformations to a deterministic code-based execution.
 
-Phase 1 — Local Python Automation
-The first implementation consolidated the business process into a Python-based workflow.
+```mermaid
+graph LR
+    A[Input Data] --> B[Python Processing]
+    B --> C[Business Rules]
+    C --> D[Validation]
+    D --> E[Excel Output]
+    style B fill:#f9f9f9,stroke:#333,stroke-width:1px
+```
 
-Instead of manually performing transformations and preparing the output, Python became responsible for orchestrating the processing steps.
+### Phase 2 — Business Rules and Data Validation
+To ensure long-term maintainability, the codebase was refactored to decouple data transformations, business logic evaluation, validation constraints, and exception detection. This modular structure simplified testing and isolating data anomalies.
 
-Input Data
-    |
-    v
-Python Processing
-    |
-    v
-Business Rules
-    |
-    v
-Validation
-    |
-    v
-Excel Output
+### Phase 3 — Automated Excel Generation
+The final step of the local phase utilized `openpyxl` to automate formatting, structuring, and generating the final Excel deliverable. This removed human intervention from the reporting phase and guaranteed structural consistency across deliveries.
 
-This established the foundation for reusable and deterministic automation.
+### Phase 4 — Databricks Migration
+The architecture was re-engineered to run natively within Databricks. This shift eliminated dependencies on local Python runtimes and manual data preparation, centralizing all execution stages inside a managed data environment.
 
-Phase 2 — Business Rules and Data Validation
+```mermaid
+graph TD
+    A[Enterprise Data] --> B[Databricks Environment]
+    B --> C[Python Processing Engine]
+    C --> D[Business Rules Layer]
+    D --> E[Validation Layer]
+    E --> F[Excel Generation]
+    F --> G[Shared Output Storage]
+    style B fill:#f9f9f9,stroke:#333,stroke-width:1px
+```
 
-Business requirements were translated into reusable processing logic.
+### Phase 5 — Job-Based Automation
+The final state transitions the pipeline into an automated Databricks Job workflow, maximizing repeatability and reducing manual execution triggers to a minimum.
 
-The workflow was structured to separate:
+```mermaid
+graph LR
+    A[Databricks Job] --> B[Extraction]
+    B --> C[Transform]
+    C --> D[Business Rules]
+    D --> E[Validation]
+    E --> F[Report Gen]
+    F --> G[Shared Storage]
+    style A fill:#f9f9f9,stroke:#333,stroke-width:1px
+```
 
-Data transformation
-Business-rule evaluation
-Validation
-Exception detection
-Output generation
+---
 
-Separating these responsibilities made the automation easier to maintain and test.
+## Project Structure
 
-Phase 3 — Automated Excel Generation
-
-The workflow automatically generates the final business deliverable.
-
-Python and openpyxl are used to create structured Excel outputs after the transformation and validation stages have completed.
-
-This removed another manual step from the process and ensured that the generated report follows a consistent structure.
-
-Phase 4 — Databricks Migration
-
-The local architecture was redesigned for execution in Databricks.
-
-The objective was to remove the dependency on:
-
-A local Python installation
-A specific workstation
-Local execution
-Manual data preparation
-
-The new architecture centralizes processing within a managed data environment.
-
-
-Enterprise Data
-|
-v
-Databricks
-|
-v
-Python Processing
-|
-v
-Business Rules
-|
-v
-Validation
-|
-v
-Excel Generation
-|
-v
-Shared Output
-Phase 5 — Job-Based Automation
-
-The final architectural step moves execution into a job-based workflow.
-
-Databricks Job
-|
-v
-Data Extraction
-|
-v
-Transformation
-|
-v
-Business Rules
-|
-v
-Validation
-|
-v
-Report Generation
-|
-v
-Shared Output
-
-This architecture improves repeatability and reduces dependency on manual execution.
-
-Project Structure
-
+```bash
 enterprise-data-automation/
 │
 ├── data/
-│ ├── raw/
-│ └── reference/
+│   ├── raw/
+│   └── reference/
 │
 ├── src/
-│ ├── extract.py
-│ ├── transform.py
-│ ├── business_rules.py
-│ ├── validation.py
-│ └── excel_generator.py
+│   ├── extract.py
+│   ├── transform.py
+│   ├── business_rules.py
+│   ├── validation.py
+│   └── excel_generator.py
 │
 ├── notebooks/
-│ └── databricks_pipeline_demo.py
+│   └── databricks_pipeline_demo.py
 │
 ├── tests/
-│ └── test_business_rules.py
+│   └── test_business_rules.py
 │
 ├── output/
 │
 └── docs/
-└── architecture/
+    └── architecture/
+```
 
-Engineering Principles
+---
 
-Modular Processing
+## Engineering Principles
 
-Extraction, transformation, business rules, validation, and output generation are maintained as separate responsibilities.
+* **Modular Processing:** Extraction, transformation, business rules, validation, and output generation are isolated into distinct software components.
+* **Deterministic Logic:** Business decisions that follow explicit criteria are coded as strict Python rules, avoiding opaque or hardcoded decision layers.
+* **Validation Before Output:** Data records are evaluated against quality thresholds before the final report is generated, isolating exceptions prior to downstream consumption.
+* **Idempotency and Reproducibility:** Given the same input data and configuration parameters, the pipeline guarantees identical output runs.
+* **Operational Continuity:** Infrastructure choices prioritize reducing dependency on single developer workstations or fragmented local environments.
 
-Deterministic Business Rules
+---
 
-Business decisions that can be represented deterministically remain implemented as explicit Python rules rather than opaque decision logic.
+## Portfolio Version Disclaimer
+This repository serves as a portfolio-oriented recreation of an enterprise automation architecture. All datasets included are synthetic and designed exclusively for demonstration purposes.
 
-Validation Before Output
+This codebase **does not** contain:
+* Production customer data or proprietary enterprise datasets
+* Internal table names, schemas, or network URLs
+* Authentication credentials, tokens, or production secrets
+* Proprietary production source code
 
-Records are validated before the final report is produced so that exceptions can be identified before downstream consumption.
+The public implementation showcases engineering concepts, architectural design, and modern development frameworks without exposing confidential corporate assets.
 
-Reproducibility
-
-The same input data and rule configuration should produce the same output.
-
-Operational Continuity
-
-A key architectural objective is reducing dependency on a single workstation or local development environment.
-
-Portfolio Version
-
-This repository is a portfolio-oriented recreation of an enterprise automation architecture.
-
-The datasets included in this repository are synthetic and were created specifically for demonstration purposes.
-
-This repository does not contain:
-
-Production customer data
-Proprietary enterprise datasets
-Internal table names
-Internal URLs
-Authentication credentials
-Production secrets
-Production source code
-
-The public implementation demonstrates the engineering concepts, architecture, and development approach without exposing confidential business information.
-
-What This Project Demonstrates
-
-This project demonstrates practical experience with:
-
-Python automation
-Data transformation pipelines
-Business-rule implementation
-Data validation
-Excel automation
-Modular software design
-Databricks workflow migration
-Job-based automation
-Operational continuity
-Enterprise automation architecture
-Project Status
+## Core Core competencies Demonstrated
+* End-to-end Python automation and modular software design
+* Enterprise data transformation pipelines and validation frameworks
+* Databricks workflow migration and job-based cloud scheduling
+* Operational continuity strategy and legacy system modernization
