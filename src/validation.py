@@ -1,1 +1,95 @@
-# Implementation coming in the next development phase.
+import pandas as pd
+
+
+# ============================================================
+# VALIDATION CONSTANTS
+# ============================================================
+
+VALIDATION_PASSED = "PASSED"
+VALIDATION_WARNING = "WARNING"
+VALIDATION_FAILED = "FAILED"
+
+
+# ============================================================
+# RECORD-LEVEL VALIDATION
+# ============================================================
+
+def validate_record(row):
+    """
+    Validate the data quality and integrity of a processed record.
+
+    Validation is independent from the business classification.
+    A record may require business review while still passing
+    technical data-quality validation.
+    """
+
+    errors = []
+    warnings = []
+
+    # --------------------------------------------------------
+    # CUSTOMER VALIDATION
+    # --------------------------------------------------------
+
+    if pd.isna(row["customer_id"]):
+        errors.append(
+            "Missing customer ID."
+        )
+
+    if pd.isna(row["customer_name"]):
+        errors.append(
+            "Missing customer name."
+        )
+
+    if pd.isna(row["customer_type"]):
+        warnings.append(
+            "Missing customer type."
+        )
+
+    if pd.isna(row["state"]):
+        warnings.append(
+            "Missing customer state."
+        )
+
+    if pd.isna(row["status"]):
+        errors.append(
+            "Missing customer status."
+        )
+
+    # --------------------------------------------------------
+    # CONTRACT VALIDATION
+    # --------------------------------------------------------
+
+    has_contract = not pd.isna(
+        row["contract_id"]
+    )
+
+    if has_contract:
+
+        if pd.isna(row["contract_type"]):
+            errors.append(
+                "Contract exists but contract type is missing."
+            )
+
+        if pd.isna(row["start_date"]):
+            errors.append(
+                "Contract start date is missing or invalid."
+            )
+
+        if pd.isna(row["end_date"]):
+            errors.append(
+                "Contract end date is missing or invalid."
+            )
+
+        if (
+            not pd.isna(row["start_date"])
+            and not pd.isna(row["end_date"])
+            and row["start_date"] > row["end_date"]
+        ):
+            errors.append(
+                "Contract start date occurs after end date."
+            )
+
+    else:
+
+        warnings.append(
+            "Customer does not have an associated contract."
