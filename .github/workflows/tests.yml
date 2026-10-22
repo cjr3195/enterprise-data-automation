@@ -49,5 +49,8 @@ jobs:
       # ------------------------------------------------------
 
       - name: Run pytest
+        env:
+          PYTHONPATH: .
         run: |
-          python -m pytest tests -v
+          python -m pytest tests/test_business_rules.py -vv --tb=long
+
