@@ -65,6 +65,7 @@ jobs:
         run: python -m py_compile tests/test_business_rules.py
       
       - name: Run pytest
-        env: PYTHONPATH: .
+        env: 
+          PYTHONPATH:
         run: |
           python -m pytest tests/test_business_rules.py -vv --tb=long
