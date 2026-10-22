@@ -44,28 +44,80 @@ jobs:
           python -c "import src; print('src OK')"
           python -c "from src.business_rules import evaluate_record; print('business_rules OK')"
 
-      - name: Check Python syntax
-        run: |
       - name: Check extract.py syntax
         run: python -m py_compile src/extract.py
-      
+
       - name: Check transform.py syntax
         run: python -m py_compile src/transform.py
-      
+
       - name: Check business_rules.py syntax
         run: python -m py_compile src/business_rules.py
-      
+
       - name: Check validation.py syntax
         run: python -m py_compile src/validation.py
-      
+
       - name: Check excel_generator.py syntax
         run: python -m py_compile src/excel_generator.py
-      
+
       - name: Check test_business_rules.py syntax
         run: python -m py_compile tests/test_business_rules.py
-      
-      - name: Run pytest
-        env: 
+
+      - name: Test standard valid contract
+        env:
           PYTHONPATH: .
         run: |
-          python -m pytest tests/test_business_rules.py -vv --tb=long
+          python -m pytest tests/test_business_rules.py::test_standard_valid_contract -q
+
+      - name: Test high priority contract
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest tests/test_business_rules.py::test_high_priority_contract -q
+
+      - name: Test missing contract
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest tests/test_business_rules.py::test_missing_contract -q
+
+      - name: Test inactive customer
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest tests/test_business_rules.py::test_inactive_customer -q
+
+      - name: Test missing contract start date
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest tests/test_business_rules.py::test_missing_contract_start_date -q
+
+      - name: Test missing contract end date
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest tests/test_business_rules.py::test_missing_contract_end_date -q
+
+      - name: Test invalid contract date range
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest tests/test_business_rules.py::test_invalid_contract_date_range -q
+
+      - name: Test future contract
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest tests/test_business_rules.py::test_future_contract -q
+
+      - name: Test expired contract
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest tests/test_business_rules.py::test_expired_contract -q
+
+      - name: Test missing priority rule
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest tests/test_business_rules.py::test_missing_priority_rule -q
