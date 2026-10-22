@@ -104,4 +104,101 @@ def evaluate_record(row, as_of_date=None):
             "rule_applied": "FUTURE_CONTRACT",
         }
 
-    # -------
+    # --------------------------------------------------------
+    # RULE 6: EXPIRED CONTRACT
+    # --------------------------------------------------------
+
+    if row["end_date"] < as_of_date:
+
+        return {
+            "classification": CLASSIFICATION_REVIEW,
+            "decision_reason": (
+                "Contract has expired."
+            ),
+            "rule_applied": "EXPIRED_CONTRACT",
+        }
+
+    # --------------------------------------------------------
+    # RULE 7: MISSING PRIORITY CONFIGURATION
+    # --------------------------------------------------------
+
+    if pd.isna(row["priority_level"]):
+
+        return {
+            "classification": CLASSIFICATION_EXCEPTION,
+            "decision_reason": (
+                "Contract type does not have a configured "
+                "priority rule."
+            ),
+            "rule_applied": "MISSING_PRIORITY_RULE",
+        }
+
+    # --------------------------------------------------------
+    # RULE 8: HIGH PRIORITY CONTRACT
+    # --------------------------------------------------------
+
+    if row["priority_level"] == "HIGH":
+
+        return {
+            "classification": CLASSIFICATION_HIGH_PRIORITY,
+            "decision_reason": (
+                "Customer is active and has a valid "
+                "high-priority contract."
+            ),
+            "rule_applied": "HIGH_PRIORITY_CONTRACT",
+        }
+
+    # --------------------------------------------------------
+    # RULE 9: STANDARD VALID CONTRACT
+    # --------------------------------------------------------
+
+    return {
+        "classification": CLASSIFICATION_STANDARD,
+        "decision_reason": (
+            "Customer is active and has a valid "
+            "standard contract."
+        ),
+        "rule_applied": "STANDARD_VALID_CONTRACT",
+    }
+
+
+# ============================================================
+# DATASET-LEVEL RULE APPLICATION
+# ============================================================
+
+def apply_business_rules(
+    dataframe,
+    as_of_date=None,
+):
+    """
+    Apply business rules to every record in the consolidated
+    dataset.
+
+    Returns the original dataset with classification,
+    decision reason, and applied rule columns.
+    """
+
+    dataframe = dataframe.copy()
+
+    rule_results = dataframe.apply(
+        lambda row: evaluate_record(
+            row,
+            as_of_date=as_of_date,
+        ),
+        axis=1,
+    )
+
+    rule_results = pd.DataFrame(
+        rule_results.tolist(),
+        index=dataframe.index,
+    )
+
+    result = pd.concat(
+        [
+            dataframe,
+            rule_results,
+        ],
+        axis=1,
+    )
+
+    return result
