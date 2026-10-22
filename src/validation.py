@@ -92,4 +92,4 @@ def validate_record(row):
     else:
 
         warnings.append(
-            "Customer does not have an associated contract."
+            "Customer does not have an associated contract.")
