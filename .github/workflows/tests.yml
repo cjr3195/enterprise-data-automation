@@ -62,62 +62,9 @@ jobs:
       - name: Check test_business_rules.py syntax
         run: python -m py_compile tests/test_business_rules.py
 
-      - name: Test standard valid contract
+      - name: Run end-to-end pipeline test
         env:
           PYTHONPATH: .
         run: |
-          python -m pytest tests/test_business_rules.py::test_standard_valid_contract -q
+          python -m pytest tests/test_pipeline.py -v
 
-      - name: Test high priority contract
-        env:
-          PYTHONPATH: .
-        run: |
-          python -m pytest tests/test_business_rules.py::test_high_priority_contract -q
-
-      - name: Test missing contract
-        env:
-          PYTHONPATH: .
-        run: |
-          python -m pytest tests/test_business_rules.py::test_missing_contract -q
-
-      - name: Test inactive customer
-        env:
-          PYTHONPATH: .
-        run: |
-          python -m pytest tests/test_business_rules.py::test_inactive_customer -q
-
-      - name: Test missing contract start date
-        env:
-          PYTHONPATH: .
-        run: |
-          python -m pytest tests/test_business_rules.py::test_missing_contract_start_date -q
-
-      - name: Test missing contract end date
-        env:
-          PYTHONPATH: .
-        run: |
-          python -m pytest tests/test_business_rules.py::test_missing_contract_end_date -q
-
-      - name: Test invalid contract date range
-        env:
-          PYTHONPATH: .
-        run: |
-          python -m pytest tests/test_business_rules.py::test_invalid_contract_date_range -q
-
-      - name: Test future contract
-        env:
-          PYTHONPATH: .
-        run: |
-          python -m pytest tests/test_business_rules.py::test_future_contract -q
-
-      - name: Test expired contract
-        env:
-          PYTHONPATH: .
-        run: |
-          python -m pytest tests/test_business_rules.py::test_expired_contract -q
-
-      - name: Test missing priority rule
-        env:
-          PYTHONPATH: .
-        run: |
-          python -m pytest tests/test_business_rules.py::test_missing_priority_rule -q
