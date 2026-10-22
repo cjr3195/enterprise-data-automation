@@ -92,4 +92,115 @@ def validate_record(row):
     else:
 
         warnings.append(
-            "Customer does not have an associated contract.")
+            "Customer does not have an associated contract."
+        )
+
+    # --------------------------------------------------------
+    # PRIORITY CONFIGURATION VALIDATION
+    # --------------------------------------------------------
+
+    if (
+        has_contract
+        and not pd.isna(row["contract_type"])
+        and pd.isna(row["priority_level"])
+    ):
+        warnings.append(
+            "Contract type does not have a configured "
+            "priority level."
+        )
+
+    # --------------------------------------------------------
+    # BUSINESS RULE OUTPUT VALIDATION
+    # --------------------------------------------------------
+
+    if pd.isna(row["classification"]):
+        errors.append(
+            "Business classification was not generated."
+        )
+
+    if pd.isna(row["rule_applied"]):
+        errors.append(
+            "Applied business rule was not recorded."
+        )
+
+    if pd.isna(row["decision_reason"]):
+        errors.append(
+            "Decision reason was not generated."
+        )
+
+    # --------------------------------------------------------
+    # FINAL VALIDATION STATUS
+    # --------------------------------------------------------
+
+    if errors:
+
+        validation_status = (
+            VALIDATION_FAILED
+        )
+
+    elif warnings:
+
+        validation_status = (
+            VALIDATION_WARNING
+        )
+
+    else:
+
+        validation_status = (
+            VALIDATION_PASSED
+        )
+
+    all_issues = (
+        errors
+        + warnings
+    )
+
+    return {
+        "validation_status": validation_status,
+        "validation_issues": (
+            " | ".join(all_issues)
+            if all_issues
+            else None
+        ),
+        "validation_error_count": len(
+            errors
+        ),
+        "validation_warning_count": len(
+            warnings
+        ),
+    }
+
+
+# ============================================================
+# DATASET-LEVEL VALIDATION
+# ============================================================
+
+def validate_dataset(dataframe):
+    """
+    Apply data-quality validation to every processed record.
+
+    Returns the original dataset with validation status,
+    issues, error count, and warning count.
+    """
+
+    dataframe = dataframe.copy()
+
+    validation_results = dataframe.apply(
+        validate_record,
+        axis=1,
+    )
+
+    validation_results = pd.DataFrame(
+        validation_results.tolist(),
+        index=dataframe.index,
+    )
+
+    result = pd.concat(
+        [
+            dataframe,
+            validation_results,
+        ],
+        axis=1,
+    )
+
+    return result
