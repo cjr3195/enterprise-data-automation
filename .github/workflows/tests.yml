@@ -46,15 +46,25 @@ jobs:
 
       - name: Check Python syntax
         run: |
-          python -m py_compile src/extract.py
-          python -m py_compile src/transform.py
-          python -m py_compile src/business_rules.py
-          python -m py_compile src/validation.py
-          python -m py_compile src/excel_generator.py
-          python -m py_compile tests/test_business_rules.py
-
+          - name: Check extract.py syntax
+        run: python -m py_compile src/extract.py
+      
+      - name: Check transform.py syntax
+        run: python -m py_compile src/transform.py
+      
+      - name: Check business_rules.py syntax
+        run: python -m py_compile src/business_rules.py
+      
+      - name: Check validation.py syntax
+        run: python -m py_compile src/validation.py
+      
+      - name: Check excel_generator.py syntax
+        run: python -m py_compile src/excel_generator.py
+      
+      - name: Check test_business_rules.py syntax
+        run: python -m py_compile tests/test_business_rules.py
+      
       - name: Run pytest
-        env:
-          PYTHONPATH: .
+        env: PYTHONPATH: .
         run: |
           python -m pytest tests/test_business_rules.py -vv --tb=long
