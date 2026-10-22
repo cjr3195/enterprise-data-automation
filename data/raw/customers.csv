@@ -1,0 +1,11 @@
+customer_id,customer_name,customer_type,state,status
+C10001,Sunrise Medical Center,HCO,FL,ACTIVE
+C10002,Northside Pharmacy,HCO,GA,ACTIVE
+C10003,Atlantic Health Group,HCO,NC,ACTIVE
+C10004,Central Family Clinic,HCO,TX,INACTIVE
+C10005,Lakeside Medical Center,HCO,FL,ACTIVE
+C10006,Evergreen Health Partners,HCO,CA,ACTIVE
+C10007,River Valley Clinic,HCO,TN,ACTIVE
+C10008,Cascade Medical Group,HCO,WA,ACTIVE
+C10009,Coastal Health Center,HCO,FL,ACTIVE
+C10010,Mountain View Clinic,HCO,CO,ACTIVE
