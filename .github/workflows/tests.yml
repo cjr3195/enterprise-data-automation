@@ -46,7 +46,7 @@ jobs:
 
       - name: Check Python syntax
         run: |
-          - name: Check extract.py syntax
+      - name: Check extract.py syntax
         run: python -m py_compile src/extract.py
       
       - name: Check transform.py syntax
@@ -66,6 +66,6 @@ jobs:
       
       - name: Run pytest
         env: 
-          PYTHONPATH:
+          PYTHONPATH: .
         run: |
           python -m pytest tests/test_business_rules.py -vv --tb=long
